@@ -1,8 +1,11 @@
+import { AppDataSource } from "../db/db.connect";
+import { router_login } from "../routes";
+
 const { router_register } = require("../routes/routes.register") ;
+const { errorHandler }    = require("../middlewares/errorcentralizado") ;
 
 const express = require("express");
-const cors = require("cors");
-
+const cors    = require("cors");
 
 class Server {
     
@@ -15,6 +18,7 @@ class Server {
 
         this.middlewares();
         this.routes();
+        this.database();
     }
 
     middlewares(){
@@ -24,6 +28,19 @@ class Server {
     
     routes(){
         this.app.use( "/auth/register" , router_register );
+        this.app.use( "/auth/login" , router_login );
+        this.app.use(errorHandler);
+    }
+    
+    async database(){
+        try {
+            await AppDataSource.initialize();
+            console.log("[DB] Connected");
+            
+        } catch (error) {
+            
+            console.log("[DB] Error de conexion" , error);
+        }
     }
 
     init(){

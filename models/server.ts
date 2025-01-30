@@ -1,9 +1,7 @@
 import { verificarToken } from "../auth/jwt.auth";
 import { AppDataSource } from "../db/db.connect";
-import { router_login } from "../routes";
-import { router_rol } from "../routes/routes.rol";
+import { router_login, router_rol, router_register, router_product } from "../routes";
 
-const { router_register } = require("../routes/routes.register") ;
 const { errorHandler }    = require("../middlewares/errorcentralizado") ;
 
 const express = require("express");
@@ -31,9 +29,10 @@ class Server {
     routes(){
         this.app.use( "/auth/register" , router_register );
         this.app.use( "/auth/login" , router_login );
-        this.app.use( verificarToken);
         this.app.use( "/rol" , router_rol );
-        this.app.use( errorHandler);
+        this.app.use(verificarToken );
+        this.app.use( "/products" , router_product );
+        this.app.use(errorHandler);
     }
     
     async database(){

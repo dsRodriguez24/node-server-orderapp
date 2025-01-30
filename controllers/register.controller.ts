@@ -1,31 +1,30 @@
 import { NextFunction, Request, Response } from "express";
 import { CustomError } from "../models/error";
-import { generarToken } from "../auth/jwt.auth";
+import { User } from "../entities/user.entity";
 
-export const crear = (req: Request , res: Response, next: NextFunction) => {
+
+export const crear = async (req: Request , res: Response, next: NextFunction) => {
     try {
-
-        const { email, password } = req.body;
-        console.log(req.body);
-        
-        if ( !email || !password) {
-            throw new CustomError('Email o constraseña no enviados' , 400);
+        const { nombre, email, rol, password } = req.body;
+        if ( !nombre || !email || !rol || !password) {
+            throw new CustomError('Faltan parametros' , 400);
         }
 
-        const token = generarToken( { email, password } );
-        const response = {
-            token,
-            msg: "Sesion iniciada correctamente"
-        };
+        const user = new User();
+        user.nombre     = nombre;
+        user.email      = email;
+        user.password   = password;
+        user.rol        = rol;
 
-        return res.send(response).status(200);
+        await user.save();
+        return res.json({ message: "Creado" }).status(201);
+
     } catch (error) {
         next(error);
     }
 }
 
 export const actualizar = (req: Request , res: Response, next: NextFunction) => {
-
     try {
         throw new CustomError('Metodo no permitido' , 405);
     } catch (error) {
@@ -39,7 +38,6 @@ export const eliminar = (req: Request , res: Response, next: NextFunction) => {
         next(error);
     }
 }
-
 export const obtener = (req: Request , res: Response, next: NextFunction) => {
     try {
         throw new CustomError('Metodo no permitido' , 405);

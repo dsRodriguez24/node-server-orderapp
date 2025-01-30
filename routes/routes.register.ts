@@ -1,4 +1,4 @@
-import { actualizar, crear, eliminar, obtener } from "../controllers/controller.register";
+import { actualizar, crear, eliminar, obtener } from "../controllers/register.controller";
 
 export const router_register = require("express").Router();
 

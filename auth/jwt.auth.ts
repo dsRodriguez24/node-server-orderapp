@@ -3,7 +3,7 @@ import { UserLogin } from "../interfaces/userjwt.interface";
 
 const jwt = require("jsonwebtoken");
 
-const generarToken = (usuario : UserLogin) => {
+export const generarToken = (usuario : UserLogin) => {
   return jwt.sign(
     usuario,
     process.env.JWT_SECRET,
@@ -11,7 +11,7 @@ const generarToken = (usuario : UserLogin) => {
   );
 };
 
-const verificarToken = (req: Request, res: Response, next: NextFunction) => {
+export const verificarToken = (req: Request, res: Response, next: NextFunction) => {
     const token = req.headers["authorization"];
 
     if (!token) {

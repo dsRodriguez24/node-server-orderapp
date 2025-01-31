@@ -1,5 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { UserLogin } from "../interfaces/userjwt.interface";
+import { esAdmin } from "../controllers/rol.controller";
+import { CustomError } from "../models/error";
 
 const jwt = require("jsonwebtoken");
 
@@ -11,18 +13,17 @@ export const generarToken = (usuario : UserLogin) => {
   );
 };
 
-export const verificarToken = (req: Request, res: Response, next: NextFunction) => {
+export const verificarToken = async (req: Request, res: Response, next: NextFunction) => {
     const token = req.headers["authorization"];
 
-    if (!token) {
-        return res.status(401).json({ mensaje: "Acceso denegado. Token requerido." });
-    }
+    if (!token) return res.status(401).json({ mensaje: "Acceso denegado. Token requerido." });
 
     try {
-        const decoded = jwt.verify(token.split(" ")[1], process.env.JWT_SECRET);
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        decoded.esAdmin = await esAdmin(Number(decoded.rol.id));
         req.headers.datauser = decoded;
         next();
     } catch (error) {
-        return res.status(401).json({ mensaje: "Token inválido o expirado." });
+        return res.status(401).json({ mensaje: "Token inválido o expirado. Vuelve a iniciar sesion" });
     }
 };

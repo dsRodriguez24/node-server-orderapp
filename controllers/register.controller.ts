@@ -10,14 +10,14 @@ export const crear = async (req: Request , res: Response, next: NextFunction) =>
             throw new CustomError('Faltan parametros' , 400);
         }
 
-        const user = new User();
+        const user: User = new User();
         user.nombre     = nombre;
         user.email      = email;
         user.password   = password;
         user.rol        = rol;
 
         await user.save();
-        return res.json({ message: "Creado" }).status(201);
+        return res.json({ status: true, message: "Usuario creado correctamente" }).status(201);
 
     } catch (error) {
         next(error);

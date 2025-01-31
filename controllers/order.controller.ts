@@ -55,10 +55,15 @@ export const crear = async (req: Request , res: Response, next: NextFunction) =>
         const dataUser:any = req.headers.datauser;
         const { id } = dataUser;
 
-        const { customer, detalle } = req.body;
+        const { seller , detalle } = req.body;
+
+        if (!seller || isNaN(seller)) throw new CustomError('Seller no enviado o invalido' , 401);
+        if (!detalle) throw new CustomError('Detalle no enviado o invalido' , 401);
+        
+
 
         const orden = new Order();
-        orden.customer = customer;
+        orden.seller = seller;
         orden.user     = id;
         
         await orden.save();
@@ -68,12 +73,14 @@ export const crear = async (req: Request , res: Response, next: NextFunction) =>
             data.orderId = ordenId;
 
             const detalleOrden = new OrderDetail();
-            detalleOrden.order = data.orderId;
-            detalleOrden.product = data.product;
-            detalleOrden.nombre = data.nombre;
-            detalleOrden.precio = data.precio;
-            detalleOrden.user = data.userId;
-            detalleOrden.customer = customer;
+            detalleOrden.order           = data.orderId;
+            detalleOrden.cantidad        = data.cantidad;
+            detalleOrden.precio_total    = data.precio_total;
+            detalleOrden.product         = data.product;
+            detalleOrden.nombre          = data.nombre;
+            detalleOrden.precio_unitario = data.precio_unitario;
+            detalleOrden.user            = data.userId;
+            detalleOrden.seller          = data.seller;
 
             await detalleOrden.save();
 

@@ -10,7 +10,7 @@ export class Order extends BaseEntity {
     user: number
 
     @ManyToOne( () => User, (user) => user.id )
-    customer: number
+    seller: number
 
     @Column({default: true})
     activo: boolean

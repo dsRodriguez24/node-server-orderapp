@@ -1,8 +1,10 @@
 export interface DetalleOrden {
-    orderId: number,
-    product: number,
+    seller: number,
     nombre: string,
-    precio: string,
-    userId: number,
-    customer: number
+    orderId: number,
+    cantidad: number,
+    precio_total: number,
+    precio_unitario: number,
+    product: number,
+    userId: number
 }

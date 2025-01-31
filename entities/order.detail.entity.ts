@@ -11,20 +11,26 @@ export class OrderDetail extends BaseEntity {
     @ManyToOne( () => Order, ( order) => order.id )
     order: number
     
+    @Column()
+    cantidad: number
+
     @OneToOne( () => Product, ( product) => product.id )
     product: number
 
     @Column()
     nombre: string
 
-    @Column()
-    precio: string
+    @Column({ type: 'decimal', precision: 10, scale: 2 })
+    precio_unitario: number
+
+    @Column({ type: 'decimal', precision: 10, scale: 2 })
+    precio_total: number
 
     @ManyToOne( () => User, (user) => user.id )
     user: number
 
     @ManyToOne( () => User, (user) => user.id )
-    customer: number
+    seller: number
 
     @Column({default: true})
     activo: boolean

@@ -1,0 +1,568 @@
+openapi: 3.0.0
+info:
+  title: Docs - API - OrderApp
+  description: API para la gestión de usuarios
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+    description: Servidor local
+
+paths:
+  /auth/register:
+
+    post:
+      summary: Crear / registrar un nuevo usuario
+      operationId: createUser
+      tags:
+        - Usuarios
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nombre:
+                  type: string
+                  example: "Juan Perez"
+                email:
+                  type: string
+                  example: "usuario@example.com"
+                password:
+                  type: string
+                  format: password
+                  example: "123456"
+                rol:
+                  type: integer
+                  enum: [1, 2]
+                  description: "Rol del usuario, donde 1 es administrador y 2 es cliente"
+                  example: 0
+      responses:
+        "201":
+          description: Usuario creado exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    description: Indica si la operación fue exitosa
+                    example: true
+                  message:
+                    type: string
+                    example: "Usuario creado correctamente"
+
+        "400":
+          description: Faltan parametros
+          
+  /auth/login:
+    post:
+      summary: Iniciar sesion con usuario registrado
+      #operationId: createUser
+      tags:
+        - Usuarios
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: "usuario@example.com"
+                password:
+                  type: string
+                  format: password
+                  example: "123456"
+      responses:
+        "200":
+          description: Sesion iniciada correctamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      token:
+                        type: string
+                        description: Token de autenticación JWT
+                        example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                  message:
+                    type: string
+                    example: "Sesion iniciada correctamente"
+        "404":
+          description: No existe un usuario relacionado a este email
+        "400":
+          description: Email o clave no enviados
+        "401":
+          description: Combinacion de email y clave incorrectos
+
+  # Docs - Routes Products
+  /products:
+    get:
+      summary: Obtener listado de productos
+      #operationId: getUserById
+      tags:
+        - Productos
+      parameters:
+        - name: authorization
+          in: header
+          required: true
+          schema:
+            type: string
+          description: "Token de autenticación"
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      nombre:
+                        type: string
+                        example: "Camiseta XL"
+                      codigo:
+                        type: string
+                        example: "ABC-123"
+                      precio_compra:
+                        type: integer
+                        example: 5500
+                      precio_venta:
+                        type: integer
+                        example: 15500
+                      stock:
+                        type: integer
+                        example: 50
+                  status:
+                    type: boolean
+                    example: true
+        "404":
+          description: Productos no encontrados
+    post:
+      summary: Crear un nuevo producto
+      #operationId: getUserById
+      tags:
+        - Productos
+      parameters:
+        - name: authorization
+          in: header
+          required: true
+          schema:
+            type: string
+          description: "Token de autenticación"
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nombre:
+                  type: string
+                  example: "Camiseta XL"
+                codigo:
+                  type: string
+                  example: "ABC-123"
+                precio_compra:
+                  type: integer
+                  example: 5500
+                precio_venta:
+                  type: integer
+                  example: 15500
+                stock:
+                  type: integer
+                  example: 50
+      responses:
+        "200":
+          description: Producto guardado correctamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      nombre:
+                        type: string
+                        example: "Camiseta XL"
+                      codigo:
+                        type: string
+                        example: "ABC-123"
+                      precio_compra:
+                        type: integer
+                        example: 5500
+                      precio_venta:
+                        type: integer
+                        example: 15500
+                      stock:
+                        type: integer
+                        example: 50
+                  status:
+                    type: boolean
+                    example: true
+        "500":
+          description: Error inesperado
+  
+  /products/{id}:
+    get:
+      summary: Obtener un producto por ID
+      #operationId: getUserById
+      tags:
+        - Productos
+      parameters:
+        - name: authorization
+          in: header
+          required: true
+          schema:
+            type: string
+          description: "Token de autenticación"
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Usuario encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      nombre:
+                        type: string
+                        example: "Camiseta XL"
+                      codigo:
+                        type: string
+                        example: "ABC-123"
+                      precio_compra:
+                        type: integer
+                        example: 5500
+                      precio_venta:
+                        type: integer
+                        example: 15500
+                      stock:
+                        type: integer
+                        example: 50
+                  status:
+                    type: boolean
+                    example: true
+        "404":
+          description: Producto no encontrado
+        "401":
+          description: Datos incompletos
+
+    put:
+      summary: Actualizar un producto
+      #operationId: updateUser
+      tags:
+        - Productos
+      parameters:
+        - name: authorization
+          in: header
+          required: true
+          schema:
+            type: string
+          description: "Token de autenticación"
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nombre:
+                  type: string
+                  example: "Camiseta XL"
+                codigo:
+                  type: string
+                  example: "ABC-123"
+                precio_compra:
+                  type: integer
+                  example: 5500
+                precio_venta:
+                  type: integer
+                  example: 15500
+                stock:
+                  type: integer
+                  example: 50
+      responses:
+        "201":
+          description: Producto actualizado exitosamente
+        "401":
+          description: Datos incompletos
+        "404":
+          description: Producto no encontrado
+
+    delete:
+      summary: Eliminar un producto
+      #operationId: deleteUser
+      tags:
+        - Productos
+      parameters:
+        - name: authorization
+          in: header
+          required: true
+          schema:
+            type: string
+          description: "Token de autenticación"
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "201":
+          description: Producto eliminado exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: string
+                    example: []
+                  status:
+                    type: boolean
+                    example: true
+        "404":
+          description: Producto no encontrado
+          
+  /order:
+    get:
+      summary: Obtener listado de órdenes
+      tags:
+        - Ordenes
+      parameters:
+        - name: authorization
+          in: header
+          required: true
+          schema:
+            type: string
+          description: "Token de autenticación"
+          example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        user:
+                          type: integer
+                          example: 1
+                        customer:
+                          type: integer
+                          example: 2
+                        detalle:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              order:
+                                type: integer
+                                example: 1
+                              product:
+                                type: integer
+                                example: 1
+                              cantidad:
+                                type: integer
+                                example: 2
+                              nombre:
+                                type: string
+                                example: "Camiseta XL"
+                              precio_unitario:
+                                type: string
+                                example: "15000"
+                              precio_total:
+                                type: string
+                                example: "30000"
+                              user:
+                                type: integer
+                                example: 1
+                              customer:
+                                type: integer
+                                example: 2
+        "404":
+          description: Ordenes no encontradas
+    post:
+      summary: Crear una nueva orden
+      tags:
+        - Ordenes
+      parameters:
+      - name: authorization
+        in: header
+        required: true
+        schema:
+          type: string
+        description: "Token de autenticación"
+        example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                seller:
+                  type: integer
+                  description: "ID del vendedor"
+                  example: 1
+                detalle:
+                  type: array
+                  description: "Lista de productos en la orden"
+                  items:
+                    type: object
+                    properties:
+                      order:
+                        type: integer
+                        example: 1
+                      product:
+                        type: integer
+                        example: 1
+                      cantidad:
+                        type: integer
+                        example: 2
+                      nombre:
+                        type: string
+                        example: "Camiseta XL"
+                      precio_unitario:
+                        type: string
+                        example: "15000"
+                      precio_total:
+                        type: string
+                        example: "30000"
+                      user:
+                        type: integer
+                        example: 1
+                      customer:
+                        type: integer
+                        example: 2
+      responses:
+        "201":
+          description: Orden creada exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Orden creada exitosamente"
+        "401":
+          description: Parametros en formato incorrecto
+
+
+      
+  /order/{id}:
+    get:
+      summary: Obtener una orden por id
+      tags:
+        - Ordenes
+      parameters:
+        - name: authorization
+          in: header
+          required: true
+          schema:
+            type: string
+          description: "Token de autenticación"
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  user:
+                    type: integer
+                    example: 1
+                  customer:
+                    type: integer
+                    example: 2
+                  detalle:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        order:
+                          type: integer
+                          example: 1
+                        product:
+                          type: integer
+                          example: 1
+                        cantidad:
+                          type: integer
+                          example: 2
+                        nombre:
+                          type: string
+                          example: "Camiseta XL"
+                        precio_unitario:
+                          type: string
+                          example: "15000"
+                        precio_total:
+                          type: string
+                          example: "30000"
+                        user:
+                          type: integer
+                          example: 1
+                        customer:
+                          type: integer
+                          example: 2
+        "404":
+          description: Orden no encontrada

@@ -41,7 +41,7 @@ export const crear = async (req: Request , res: Response, next: NextFunction) =>
 
         await producto.save();
 
-        return res.send({ status: true, data: [] }).status(201);
+        return res.send({ status: true, data: producto }).status(201);
         
     } catch (error) {
         next(error);
@@ -53,7 +53,8 @@ export const actualizar = async (req: Request , res: Response, next: NextFunctio
     try {
         const id = Number(req.params.id);
         await Product.update({ id }, req.body);
-        return res.send({status: true, data: [] }).status(201);
+        const producto = await Product.findBy({ id, activo: true })
+        return res.send({status: true, data: producto }).status(201);
 
     } catch (error) {
         next(error);

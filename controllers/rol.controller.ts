@@ -26,6 +26,18 @@ export const eliminar = (req: Request , res: Response, next: NextFunction) => {
     }
 }
 
+export const esAdmin = async (id: number) => {
+    try {
+        const userRol = await Rol.findOneBy({ id });
+        if (!userRol)  return false;
+        if (userRol.nombre == 'Administrador') return true;
+        return false;
+    } catch (error) {
+        return false;
+    }
+    
+}
+
 const crearRolesDefault = async () => {
     try {
         const rolAdmin  = new Rol();

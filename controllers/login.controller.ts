@@ -11,13 +11,19 @@ export const crear = async (req: Request , res: Response, next: NextFunction) =>
         
         if ( !email || !password)  throw new CustomError('Email o constraseña no enviados' , 400);
 
-        const user = await User.findOneBy({ email });
+        const user = await User.findOne({ 
+            where: { email },
+            relations: ["rol"], 
+        });
 
         if (!user) throw new CustomError(`No existe un usuario relacionado al email '${email}'` , 404);
 
         if (user.password !== password)  throw new CustomError(`Combinacion de usuario y contraseña incorrecta` , 400)
 
-        const { id, nombre, rol } = user; 
+        const { id, nombre, rol } = user;
+        console.log("User " , user);
+        
+        
         const token = generarToken( { email, password , id, nombre, rol } );
         const response = {
             data : { token },

@@ -1,55 +1,73 @@
 import { NextFunction, Request, Response } from "express";
 import { CustomError } from "../models/error";
-import { generarToken } from "../auth/jwt.auth";
-import { User } from "../entities/user.entity";
+import { Product } from "../entities/product.entity";
 
+export const obtener = async (req: Request , res: Response, next: NextFunction) => {
+    try {
+        const productos = await Product.findBy( { activo: true })
+        if (!productos) throw new CustomError('Productos no encontrados' , 404);
+        return res.json({status: true, data: productos }).status(200);
+        
+    } catch (error) {
+        next(error);
+    }
+}
+
+export const obtenerPorId = async (req: Request , res: Response, next: NextFunction) => {
+    try {
+        const id = Number(req.params.id);
+        const producto = await Product.findBy({ id, activo: true })
+        return res.json({status: true, data: producto }).status(200);
+    } catch (error) {
+        next(error);
+    }
+}
 
 export const crear = async (req: Request , res: Response, next: NextFunction) => {
     try {
 
-        const { email, password } = req.body;
+        const dataUser:any = req.headers.datauser;
+        const { id } = dataUser;
+
+        const { nombre , codigo , precio_compra , precio_venta, stock } = req.body;
+
+        const producto = new Product();
+        producto.nombre         = nombre;
+        producto.codigo         = codigo;
+        producto.precio_compra  = precio_compra;
+        producto.precio_venta   = precio_venta;
+        producto.stock          = stock;
+        producto.user_id        = id;
+
+        await producto.save();
+
+        return res.send({ status: true, data: [] }).status(201);
         
-        if ( !email || !password)  throw new CustomError('Email o constraseña no enviados' , 400);
+    } catch (error) {
+        next(error);
+    }
+}
 
-        const user = await User.findOneBy({ email });
+export const actualizar = async (req: Request , res: Response, next: NextFunction) => {
 
-        if (!user) throw new CustomError(`No existe un usuario relacionado al email '${email}'` , 404);
-
-        if (user.password !== password)  throw new CustomError(`Combinacion de usuario y contraseña incorrecta` , 400)
-
-        const { id, nombre, rol } = user; 
-        const token = generarToken( { email, password , id, nombre, rol } );
-        const response = {
-            data : { token },
-            message: "Sesion iniciada correctamente"
-        };
-
-        return res.send(response).status(200);
+    try {
+        const id = Number(req.params.id);
+        await Product.update({ id }, req.body);
+        return res.send({status: true, data: [] }).status(201);
 
     } catch (error) {
         next(error);
     }
 }
 
-export const actualizar = (req: Request , res: Response, next: NextFunction) => {
+export const eliminar = async (req: Request , res: Response, next: NextFunction) => {
+    try {
+        const id = Number(req.params.id);
+        await Product.update({ id }, {
+            activo: false
+        });
+        return res.send({status: true, data: [] }).status(201);
 
-    try {
-        throw new CustomError('Metodo no permitido' , 405);
-    } catch (error) {
-        next(error);
-    }
-}
-export const eliminar = (req: Request , res: Response, next: NextFunction) => {
-    try {
-        throw new CustomError('Metodo no permitido' , 405);
-    } catch (error) {
-        next(error);
-    }
-}
-
-export const obtener = (req: Request , res: Response, next: NextFunction) => {
-    try {
-        throw new CustomError('Metodo no permitido' , 405);
     } catch (error) {
         next(error);
     }

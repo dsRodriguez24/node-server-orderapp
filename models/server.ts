@@ -1,6 +1,6 @@
 import { verificarToken } from "../auth/jwt.auth";
 import { AppDataSource } from "../db/db.connect";
-import { router_login, router_rol, router_register, router_product } from "../routes";
+import { router_login, router_rol, router_register, router_product, router_order } from "../routes";
 
 const { errorHandler }    = require("../middlewares/errorcentralizado") ;
 
@@ -30,8 +30,9 @@ class Server {
         this.app.use( "/auth/register" , router_register );
         this.app.use( "/auth/login" , router_login );
         this.app.use( "/rol" , router_rol );
-        this.app.use(verificarToken );
+        this.app.use( verificarToken );
         this.app.use( "/products" , router_product );
+        this.app.use( "/order" , router_order );
         this.app.use(errorHandler);
     }
     

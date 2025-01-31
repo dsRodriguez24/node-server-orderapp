@@ -2,7 +2,6 @@ import { Request, Response, NextFunction } from "express";
 import { CustomError } from "../models/error";
 
 
-// 📌 Middleware para validar `req.body`
 export const validateAdmin = (req: Request, res: Response, next: NextFunction) => {
     
     const dataUser:any      = req.headers.datauser;

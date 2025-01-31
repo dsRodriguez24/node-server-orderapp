@@ -1,8 +1,8 @@
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { User } from "./user.entity";
 
 @Entity()
-export class Order {
+export class Order extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number
 
@@ -13,7 +13,7 @@ export class Order {
     customer: number
 
     @Column({default: true})
-        activo: boolean
+    activo: boolean
     
     @CreateDateColumn()
     fecha_registro: Date

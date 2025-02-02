@@ -6,38 +6,42 @@ import { Product } from "./product.entity";
 @Entity()
 export class OrderDetail extends BaseEntity {
     @PrimaryGeneratedColumn()
-    id: number
+    id: number;
 
-    @ManyToOne( () => Order, ( order) => order.id )
-    order: number
+    // Relación ManyToOne con Order
+    @ManyToOne(() => Order, (order) => order.id)
+    order: number; 
     
     @Column()
-    cantidad: number
+    cantidad: number;
 
-    @OneToOne( () => Product, ( product) => product.id )
-    product: number
+    // Relación OneToOne con Product
+    @OneToOne(() => Product, (product) => product.id)
+    product: Product;  // Cambiado a Product, no a number
 
     @Column()
-    nombre: string
+    nombre: string;
 
     @Column({ type: 'decimal', precision: 10, scale: 2 })
-    precio_unitario: number
+    precio_unitario: number;
 
     @Column({ type: 'decimal', precision: 10, scale: 2 })
-    precio_total: number
+    precio_total: number;
 
-    @ManyToOne( () => User, (user) => user.id )
-    user: number
+    // Relación ManyToOne con User (user)
+    @ManyToOne(() => User, (user) => user.id)
+    user: User;  // Cambiado a User, no a number
 
-    @ManyToOne( () => User, (user) => user.id )
-    seller: number
+    // Relación ManyToOne con User (seller)
+    @ManyToOne(() => User, (user) => user.id)
+    seller: User;  // Cambiado a User, no a number
 
-    @Column({default: true})
-    activo: boolean
-    
+    @Column({ default: true })
+    activo: boolean;
+
     @CreateDateColumn()
-    fecha_registro: Date
-    
+    fecha_registro: Date;
+
     @UpdateDateColumn()
-    fecha_actualizacion: Date
+    fecha_actualizacion: Date;
 }

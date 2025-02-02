@@ -4,6 +4,9 @@ import { Product } from "../entities/product.entity";
 
 export const obtener = async (req: Request , res: Response, next: NextFunction) => {
     try {
+
+
+        
         const productos = await Product.findBy( { activo: true })
         if (!productos) throw new CustomError('Productos no encontrados' , 404);
         return res.json({status: true, data: productos }).status(200);
@@ -41,7 +44,8 @@ export const crear = async (req: Request , res: Response, next: NextFunction) =>
 
         await producto.save();
 
-        return res.send({ status: true, data: producto }).status(201);
+        const response = { status: true, data: producto, message: "Producto creado correctamente" }
+        return res.send(response).status(201);
         
     } catch (error) {
         next(error);
@@ -54,7 +58,7 @@ export const actualizar = async (req: Request , res: Response, next: NextFunctio
         const id = Number(req.params.id);
         await Product.update({ id }, req.body);
         const producto = await Product.findBy({ id, activo: true })
-        return res.send({status: true, data: producto }).status(201);
+        return res.send({status: true, data: producto, messsage: "Producto actualizado correctamente" }).status(201);
 
     } catch (error) {
         next(error);
@@ -67,7 +71,7 @@ export const eliminar = async (req: Request , res: Response, next: NextFunction)
         await Product.update({ id }, {
             activo: false
         });
-        return res.send({status: true, data: [] }).status(201);
+        return res.send({status: true, data: [], messsage: "Producto eliminado correctamente" }).status(201);
 
     } catch (error) {
         next(error);

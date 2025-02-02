@@ -12,8 +12,8 @@ Esta API de órdenes está construida con **Node.js** y utiliza **TypeORM** con 
 1. Clona el repositorio:
 
     ```bash
-    git clone <URL_DEL_REPOSITORIO>
-    cd <nombre_del_directorio>
+    git clone https://github.com/dsRodriguez24/node-server-orderapp.git
+    cd node-server
     ```
 
 2. Instala las dependencias:

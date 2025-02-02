@@ -16,7 +16,7 @@ export const generarToken = (usuario : UserLogin) => {
 export const verificarToken = async (req: Request, res: Response, next: NextFunction) => {
     const token = req.headers["authorization"];
 
-    if (!token) return res.status(401).json({ mensaje: "Acceso denegado. Token requerido." });
+    if (!token) return res.status(401).json({ message: "Acceso denegado. Token requerido." });
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -24,6 +24,6 @@ export const verificarToken = async (req: Request, res: Response, next: NextFunc
         req.headers.datauser = decoded;
         next();
     } catch (error) {
-        return res.status(401).json({ mensaje: "Token inválido o expirado. Vuelve a iniciar sesion" });
+        return res.status(401).json({ message: "Token inválido o expirado. Vuelve a iniciar sesion", errorAuth: true });
     }
 };

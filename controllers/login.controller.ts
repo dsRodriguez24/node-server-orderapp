@@ -26,8 +26,9 @@ export const crear = async (req: Request , res: Response, next: NextFunction) =>
         
         const token = generarToken( { email, password , id, nombre, rol } );
         const response = {
-            data : { token },
-            message: "Sesion iniciada correctamente"
+            data : { token, nombre, rol },
+            message: `Sesion iniciada correctamente. Bienvenido ${nombre}`,
+            status: true
         };
 
         return res.send(response).status(200);
@@ -53,9 +54,13 @@ export const eliminar = (req: Request , res: Response, next: NextFunction) => {
     }
 }
 
-export const obtener = (req: Request , res: Response, next: NextFunction) => {
+export const obtener = async(req: Request , res: Response, next: NextFunction) => {
     try {
-        throw new CustomError('Metodo no permitido' , 405);
+        // throw new CustomError('Metodo no permitido' , 405);
+        const users = await User.findBy({ rol:1 });        
+        
+        if (!users) throw new CustomError('Productos no encontrados' , 404);
+        return res.json({status: true, data: users }).status(200);
     } catch (error) {
         next(error);
     }

@@ -13,7 +13,7 @@ Esta API de órdenes está construida con **Node.js** y utiliza **TypeORM** con 
 
     ```bash
     git clone https://github.com/dsRodriguez24/node-server-orderapp.git
-    cd node-server
+    cd node-server-orderapp
     ```
 
 2. Instala las dependencias:
